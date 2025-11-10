@@ -1,13 +1,13 @@
 //
-//  trUITests.swift
-//  trUITests
+//  YTravelsUITests.swift
+//  YTravelsUITests
 //
-//  Created by Волошин Александр on 11/10/25.
+//  Created by Волошин Александр on 11/7/25.
 //
 
 import XCTest
 
-final class trUITests: XCTestCase {
+final class YTravelsUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
