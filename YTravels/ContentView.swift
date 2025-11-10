@@ -2,7 +2,6 @@ import SwiftUI
 import OpenAPIURLSession
 
 struct ContentView: View {
-    var apikey = "dce6cc09-08b9-49c0-a4d3-77bddb427cd1"
     
     private let api: YandexRaspAPI
     
@@ -21,7 +20,6 @@ struct ContentView: View {
             fatalError("Ошибка инициализации клиента: \(error)")
         }
     }
-    
     
     var body: some View {
         VStack {
@@ -50,9 +48,7 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-    
 }
-
 
 extension ContentView {
     func testNearestStations() async {
