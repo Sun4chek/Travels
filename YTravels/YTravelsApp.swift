@@ -1,14 +1,14 @@
 //
-//  trApp.swift
-//  tr
+//  YTravelsApp.swift
+//  YTravels
 //
-//  Created by Волошин Александр on 11/10/25.
+//  Created by Волошин Александр on 11/7/25.
 //
 
 import SwiftUI
 
 @main
-struct trApp: App {
+struct YTravelsApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

@@ -1,13 +1,13 @@
 //
-//  trUITestsLaunchTests.swift
-//  trUITests
+//  YTravelsUITestsLaunchTests.swift
+//  YTravelsUITests
 //
-//  Created by Волошин Александр on 11/10/25.
+//  Created by Волошин Александр on 11/7/25.
 //
 
 import XCTest
 
-final class trUITestsLaunchTests: XCTestCase {
+final class YTravelsUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
