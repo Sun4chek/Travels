@@ -22,35 +22,71 @@ struct CitySelectView: View {
     
     var body: some View {
         NavigationStack {
-            Group {
-                if filteredCities.isEmpty && !searchText.isEmpty {
-                    VStack {
-                        Spacer()
-                        Text("Город не найден")
-                            .font(.custom("SFProText-Bold", size: 24))
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(Color(.systemBackground))
-                } else {
-                    List {
-                        ForEach(filteredCities) { city in
-                            SelectableCell(
-                                title: city.city,
-                                hasChevron: true,
-                                action: {
-                                    selectedCity = city.city
-                                    selectedCityForStations = city
-                                    showStationSelect = true
-                                }
-                            )
-                            .listRowSeparator(.hidden)
+            VStack(spacing: 0) {
+                // ← ТОЛЬКО ЭТО ДОБАВЛЕНО: твоя кастомная строка поиска
+                HStack {
+                    Image("SearchBarFirst") // замени на свою иконку (или SearchBarSecond при вводе)
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                    
+                    TextField("Введите запрос", text: $searchText)
+                        .font(.custom("SFProText-Regular", size: 17))
+                        .foregroundStyle(.primary)
+                        .disableAutocorrection(true)
+                        .textInputAutocapitalization(.never)
+                    
+                    if !searchText.isEmpty {
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.15)) {
+                                searchText = ""
+                            }
+                        } label: {
+                            Image("CancelButton") // твоя иконка крестика
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                                .foregroundStyle(.secondary)
                         }
+                        .transition(.opacity)
                     }
-                    .listStyle(.plain)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(Color(.secondarySystemBackground))
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 8)
+                
+                // ← ВСЁ ОСТАЛЬНОЕ — ТВОЙ ОРИГИНАЛЬНЫЙ КОД БЕЗ ИЗМЕНЕНИЙ
+                Group {
+                    if filteredCities.isEmpty && !searchText.isEmpty {
+                        VStack {
+                            Spacer()
+                            Text("Город не найден")
+                                .font(.custom("SFProText-Bold", size: 24))
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .background(Color(.systemBackground))
+                    } else {
+                        List {
+                            ForEach(filteredCities) { city in
+                                SelectableCell(
+                                    title: city.city,
+                                    hasChevron: true,
+                                    action: {
+                                        selectedCity = city.city
+                                        selectedCityForStations = city
+                                        showStationSelect = true
+                                    }
+                                )
+                                .listRowSeparator(.hidden)
+                            }
+                        }
+                        .listStyle(.plain)
+                    }
                 }
             }
-            .searchable(text: $searchText, prompt: "Введите запрос")
             .navigationTitle("Выбор города")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)

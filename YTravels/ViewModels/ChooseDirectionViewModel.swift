@@ -39,6 +39,31 @@ class ChooseDirectionViewModel: ObservableObject {
     }
     
     func swapDirections() {
+        let fromIsDefault = (fromCity == "Откуда" && fromStation.isEmpty)
+        let toIsDefault   = (toCity == "Куда" && toStation.isEmpty)
+        
+        // Если оба поля пустые — ничего не делаем
+        if fromIsDefault && toIsDefault { return }
+        
+        // Если "Откуда" пустое, а "Куда" заполнено → переносим "Куда" → "Откуда", "Куда" сбрасываем
+        if fromIsDefault {
+            fromCity = toCity
+            fromStation = toStation
+            toCity = "Куда"
+            toStation = ""
+            return
+        }
+        
+        // Если "Куда" пустое, а "Откуда" заполнено → переносим "Откуда" → "Куда", "Откуда" сбрасываем
+        if toIsDefault {
+            toCity = fromCity
+            toStation = fromStation
+            fromCity = "Откуда"
+            fromStation = ""
+            return
+        }
+        
+        // Если оба заполнены — обычный свап
         let tempCity = fromCity
         let tempStation = fromStation
         fromCity = toCity
