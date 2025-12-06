@@ -3,7 +3,7 @@ import Combine
 
 struct StoryFullScreenView: View {
     @ObservedObject var story: Storyes
-    let stories: [Storyes]    // все истории
+    let stories: [Storyes]  
     @Binding var isShown: Bool
     @Environment(\.dismiss) private var dismiss
     let initialIndex: Int
@@ -37,11 +37,26 @@ struct StoryFullScreenView: View {
 
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            // 🔥 Тут теперь картинка!!!
             Image(currentStory.fullSizeImage)
                 .resizable()
                 .scaledToFill()
                 .clipShape(RoundedRectangle(cornerRadius: 40))
+            
+            HStack {
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        previousStory()
+                        resetTimer()
+                    }
+
+                Color.clear
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        nextStory()
+                        resetTimer()
+                    }
+            }
 
             ProgressBar(numberOfSections: stories.count, progress: progress)
                 .padding(.top, 28)
@@ -72,6 +87,24 @@ struct StoryFullScreenView: View {
                 .padding(.init(top: 0, leading: 16, bottom: 40, trailing: 16))
             }
         )
+        
+        .gesture(
+            DragGesture(minimumDistance: 30)
+                .onEnded { value in
+                    let horizontal = value.translation.width
+
+                    if horizontal < -30 {
+                        // свайп влево → следующая история
+                        nextStory()
+                        resetTimer()
+                    }
+                    else if horizontal > 30 {
+                        // свайп вправо → предыдущая история
+                        previousStory()
+                        resetTimer()
+                    }
+                }
+        )
         .onAppear {
             progress = CGFloat(initialIndex) / CGFloat(stories.count)
             timer = Self.createTimer(configuration: configuration)
@@ -99,12 +132,27 @@ struct StoryFullScreenView: View {
     private var currentStory: Storyes {
         stories[currentIndex]
     }
+    
+    private func previousStory() {
+        let i = currentIndex
+
+        if i > 0 {
+            // переключаемся на предыдущую историю
+            progress = CGFloat(i - 1) / CGFloat(stories.count)
+        } else {
+            
+            progress = 0
+        }
+
+        markCurrentAsWatched()
+    }
+
 
     private func timerTick() {
         let newProgress = progress + configuration.progressPerTick
         if newProgress >= 1 {
             dismiss()
-            isShown = false  // закрываем сторис
+            isShown = false
         } else {
             progress = newProgress
         }
