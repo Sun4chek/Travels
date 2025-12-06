@@ -2,11 +2,12 @@ import SwiftUI
 
 struct StoryesView: View {
     @ObservedObject var story: Storyes
+    var onTap: (() -> Void)?
     
     var body: some View {
         HStack {
             Button{
-                story.isWatched.toggle()
+                onTap?() 
             } label: {
                 if !story.isWatched {
                     ZStack(alignment: .bottomLeading){
