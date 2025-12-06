@@ -26,13 +26,13 @@ final class Storyes: ObservableObject, Identifiable, Equatable {
 
 class StoriesViewModel: ObservableObject {
     @Published var stories: [Storyes] = [
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage4"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage2"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", isWatched: true, fullSizeImage: "FullStoryImage"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage2"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage2"),
-        Storyes(image: "Storyes", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage")
+        Storyes(image: "StoriesPreview1", text: "Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage1"),
+        Storyes(image: "StoriesPreview2", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage2"),
+        Storyes(image: "StoriesPreview3", text: "Text Text Text Text Text Text Text Text Text Text", isWatched: true, fullSizeImage: "FullStoryImage3"),
+        Storyes(image: "StoriesPreview4", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage4"),
+        Storyes(image: "StoriesPreview1", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage1"),
+        Storyes(image: "StoriesPreview2", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage2"),
+        Storyes(image: "StoriesPreview3", text: "Text Text Text Text Text Text Text Text Text Text", fullSizeImage: "FullStoryImage3")
     ]
 }
 
