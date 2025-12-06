@@ -3,9 +3,9 @@ import SwiftUI
 struct CroosView: View {
     @EnvironmentObject var directionVM: ChooseDirectionViewModel
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var showError = false
     @State private var showFilter = false
+    @State private var selectedCompany: CompanyModel?
+
     
     private var filteredCompanies: [CompanyModel] {
         directionVM.filteredCompanies()
@@ -31,7 +31,8 @@ struct CroosView: View {
                         LazyVStack(spacing: 8) {
                             ForEach(filteredCompanies) { company in
                                 CompanyCellView(company: company) {
-                                    showError = true
+                                    selectedCompany = company
+                                    
                                 }
                                 .padding(.horizontal, 16)
                             }
@@ -84,22 +85,11 @@ struct CroosView: View {
                     .environmentObject(directionVM)
             }
         }
-        .fullScreenCover(isPresented: $showError) {
+        .fullScreenCover(item: $selectedCompany) { company in
             NavigationStack {
-                ErrorView(text: "Нет интернета", errorImageName: "ServerError")
-                    .navigationTitle("Ошибка подключения")     // ← Заголовок
-                    .navigationBarTitleDisplayMode(.inline)    // ← Как в РЖД
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                showError = false
-                            } label: {
-                                Image(systemName: "chevron.left")
-                                    .font(.system(size: 18, weight: .semibold))
-                            }
-                        }
-                    }
+                TransitInfoView(company: company)
             }
         }
+
     }
 }

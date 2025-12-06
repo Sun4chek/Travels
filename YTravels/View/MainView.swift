@@ -11,6 +11,10 @@ struct MainView: View {
     @EnvironmentObject private var vm: StoriesViewModel
     @EnvironmentObject private var directionVM: ChooseDirectionViewModel
     @State private var showFromSheet = false
+    @State private var selectedStory: Storyes? = nil
+    @State private var showStory = false
+
+
     
     var body: some View {
         NavigationStack{
@@ -18,8 +22,12 @@ struct MainView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 12) {
                         ForEach(vm.stories) { story in
-                            StoryesView(story: story)
+                            StoryesView(story: story){
+                                selectedStory = story
+                               
+                            }
                         }
+
                     }
                     .padding(.horizontal)
                 }
@@ -49,12 +57,26 @@ struct MainView: View {
                         CroosView()
                             .environmentObject(directionVM)
                     }
+                    
+                    
                 }
                 
                 Spacer()
             }
             .padding(.top, 24)
         }
+        .fullScreenCover(item: $selectedStory) { story in
+            StoryFullScreenView(
+                story: story,
+                stories: vm.stories,
+                isShown: $showStory,
+                initialIndex: vm.stories.firstIndex(of: story) ?? 0
+            )
+        }
+
+
+
+
     }
     
 }

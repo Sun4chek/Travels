@@ -17,7 +17,7 @@ struct CustomTabView: View {
                         .environmentObject(storiesVM)
                         .environmentObject(directionVM)
                 case 1 :
-                    ErrorView(text: "Нет интернета", errorImageName: "NoInternet")
+                    SettingsView()
                 default:
                     MainView()
                         .environmentObject(storiesVM)
