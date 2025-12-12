@@ -9,19 +9,18 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @AppStorage("isDarkMode") var isOn: Bool = false
-    @State private var showAgreement = false
+    @StateObject private var viewModel = SettingsViewModel()
 
     var body: some View {
         VStack {
             HStack{
                 Text("Темная тема")
                     .font(.custom("SFProText-Regular", size: 17))
-                Toggle("", isOn: $isOn)
+                Toggle("", isOn: $viewModel.isDarkMode)
             }
             .frame(height: 60 )
            Button {
-                showAgreement = true
+               viewModel.openAgreement()
             } label : {
                 HStack{
                     Text("Пользовательское соглашение")
@@ -37,7 +36,7 @@ struct SettingsView: View {
             
         }
         .padding(.init(top: 24, leading: 16, bottom: 0, trailing: 16))
-        .fullScreenCover(isPresented: $showAgreement) {
+        .fullScreenCover(isPresented: $viewModel.showAgreement) {
                     UserAgreementView()
         }
     }
