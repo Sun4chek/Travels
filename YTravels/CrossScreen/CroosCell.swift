@@ -1,27 +1,31 @@
+// CompanyCellView.swift — ОСТАВЛЯЕМ ТО ЖЕ НАЗВАНИЕ!
 import SwiftUI
 
 struct CompanyCellView: View {
-    let company: CompanyModel
+    let route: CrossModel        // ← Только это изменилось внутри
     let onTap: () -> Void
     
     var body: some View {
         VStack {
             HStack {
-                Image(company.image)
+                Image(route.image)
+                    
+                    .resizable()
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
                     .frame(width: 38, height: 38)
                 
                 VStack {
                     HStack {
-                        Text(company.companyName)
+                        Text(route.carrierName)
                             .font(.custom("SFPro-Regular", size: 17))
                             .foregroundColor(.black)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                        Text(company.date)
+                        Text(route.travelDate)
                             .font(.custom("SFPro-Regular", size: 12))
                             .foregroundColor(.black)
                     }
                     
-                    if company.needSwapStation, let station = company.swapStation {
+                    if route.hasTransfers, let station = route.transferCity {
                         Text("С пересадкой в \(station)")
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .foregroundStyle(.red)
@@ -34,21 +38,19 @@ struct CompanyCellView: View {
             .padding(.bottom, 4)
             
             HStack {
-                Text(company.timeToStart)
+                Text(route.departureTime)
                     .font(.custom("SFProText-Regular", size: 17))
                     .foregroundColor(.black)
                 Rectangle()
                     .fill(Color.gray.opacity(0.3))
-                    
                     .frame(height: 1)
-                Text(company.allTimePath)
+                Text(route.travelDuration)
                     .foregroundColor(.black)
                     .font(.custom("SFPro-Regular", size: 12))
                 Rectangle()
-                    
                     .fill(Color.gray.opacity(0.3))
                     .frame(height: 1)
-                Text(company.timeToOver)
+                Text(route.arrivalTime)
                     .foregroundColor(.black)
                     .font(.custom("SFPro-Regula", size: 17))
             }

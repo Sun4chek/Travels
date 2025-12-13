@@ -527,6 +527,12 @@ components:
         duration:
           type: integer
           description: Длительность рейса в секундах
+        start_date:  # <--- ДОБАВЬ ЭТО ПОЛЕ!
+          type: string
+          description: Дата отправления поезда
+        has_transfers: # <--- ДОБАВЬТЕ ЭТУ СТРОКУ
+          type: boolean  # <--- И ЭТУ
+          description: Признак наличия пересадок по маршруту.
     Pagination:
       type: object
       properties:
@@ -958,5 +964,4 @@ components:
       properties:
         copyright:
           $ref: '#/components/schemas/Copyright'
-
 

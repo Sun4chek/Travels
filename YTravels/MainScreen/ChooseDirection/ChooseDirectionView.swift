@@ -5,10 +5,8 @@ struct ChooseDirectionView: View {
     
     @EnvironmentObject var directionVM: ChooseDirectionViewModel
     
-    @State private var showFromSheet = false
-    @State private var showToSheet = false
-    
     private let mainViewHeight: CGFloat = 128
+    
     
     var body: some View {
         ZStack {
@@ -18,8 +16,7 @@ struct ChooseDirectionView: View {
                 .frame(height: mainViewHeight)
             
             HStack {
-                Spacer()
-                    .frame(width: 16)
+                Spacer().frame(width: 16)
                 
                 VStack(spacing: 0) {
                     fromButton
@@ -33,31 +30,38 @@ struct ChooseDirectionView: View {
                 
                 swapButton
                     .padding(.leading, 16)
-                    .padding(.trailing, 16)
-                
+                    .padding(.trailing,16)
             }
             .frame(maxHeight: mainViewHeight)
             .padding(.horizontal, 16)
         }
         .padding(.top, 20)
         
-        .fullScreenCover(isPresented: $showFromSheet) {
-            CitySelectView(
-                selectedCity: $directionVM.fromCity,
-                selectedStation: $directionVM.fromStation
-            )
-        }
-        .fullScreenCover(isPresented: $showToSheet) {
-            CitySelectView(
-                selectedCity: $directionVM.toCity,
-                selectedStation: $directionVM.toStation
-            )
-        }
+        // Откуда
+        .fullScreenCover(isPresented: $directionVM.showFromSheet) {
+                    CitySelectView(
+                        selectedCity: $directionVM.fromCity,
+                        selectedStationName: $directionVM.fromStationName,
+                        selectedStationCode: $directionVM.fromStationCode,
+                        vm: directionVM.citySelectVM
+                    )
+            }
+        
+        // Куда
+                .fullScreenCover(isPresented: $directionVM.showToSheet) {
+                    CitySelectView(
+                        selectedCity: $directionVM.toCity,
+                        selectedStationName: $directionVM.toStationName,
+                        selectedStationCode: $directionVM.toStationCode,
+                        vm: directionVM.citySelectVM
+                    )
+                }
     }
     
+    // Остальной код кнопок без изменений
     private var fromButton: some View {
         Button {
-            showFromSheet = true
+            directionVM.showFromSheet = true
         } label: {
             HStack {
                 Text(directionVM.fromCity == "Откуда" ? "Откуда" : directionVM.fromDirection)
@@ -74,7 +78,7 @@ struct ChooseDirectionView: View {
     
     private var toButton: some View {
         Button {
-            showToSheet = true
+            directionVM.showToSheet = true
         } label: {
             HStack {
                 Text(directionVM.toCity == "Куда" ? "Куда" : directionVM.toDirection)

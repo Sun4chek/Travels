@@ -1,23 +1,29 @@
 import SwiftUI
 
+// TimeFilterView.swift — 100% как у тебя было, только с правильной архитектурой
+import SwiftUI
+
 struct TimeFilterView: View {
-    @EnvironmentObject var directionVM: ChooseDirectionViewModel
+    @StateObject private var vm: TimeFilterViewModel
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var tempSelectedTimes: Set<TimeOfDayType>
-    @State private var tempShowWithTransfer: Bool
     
     private let timeOptions = [
         ("Утро",   "06:00 - 12:00", TimeOfDayType.morning),
-        ("День",    "12:00 - 18:00", TimeOfDayType.day),
-        ("Вечер",   "18:00 - 00:00", TimeOfDayType.afternoon),
-        ("Ночь",    "00:00 - 06:00", TimeOfDayType.night)
+        ("День",   "12:00 - 18:00", TimeOfDayType.day),
+        ("Вечер",  "18:00 - 00:00", TimeOfDayType.afternoon),
+        ("Ночь",   "00:00 - 06:00", TimeOfDayType.night)
     ]
     
-    init() {
-        let vm = ChooseDirectionViewModel()
-        _tempSelectedTimes = State(initialValue: vm.selectedTimeOfDay)
-        _tempShowWithTransfer = State(initialValue: vm.showWithTransfer)
+    init(
+        initialTimes: Set<TimeOfDayType>,
+        initialTransfer: Bool,
+        onApply: @escaping (Set<TimeOfDayType>, Bool) -> Void
+    ) {
+        _vm = StateObject(wrappedValue: TimeFilterViewModel(
+            initialTimes: initialTimes,
+            initialTransfer: initialTransfer,
+            onApply: onApply
+        ))
     }
     
     var body: some View {
@@ -34,12 +40,12 @@ struct TimeFilterView: View {
                         TimeOfDayRow(
                             title: title,
                             timeRange: range,
-                            isSelected: tempSelectedTimes.contains(type)
+                            isSelected: vm.selectedTimeOfDay.contains(type)
                         ) {
-                            if tempSelectedTimes.contains(type) {
-                                tempSelectedTimes.remove(type)
+                            if vm.selectedTimeOfDay.contains(type) {
+                                vm.selectedTimeOfDay.remove(type)
                             } else {
-                                tempSelectedTimes.insert(type)
+                                vm.selectedTimeOfDay.insert(type)
                             }
                         }
                     }
@@ -55,11 +61,11 @@ struct TimeFilterView: View {
                         .padding(.horizontal, 16)
                     
                     VStack(spacing: 20) {
-                        TransferRow(title: "Да",  isSelected: tempShowWithTransfer) {
-                            tempShowWithTransfer = true
+                        TransferRow(title: "Да",  isSelected: vm.showWithTransfer) {
+                            vm.showWithTransfer = true
                         }
-                        TransferRow(title: "Нет", isSelected: !tempShowWithTransfer) {
-                            tempShowWithTransfer = false
+                        TransferRow(title: "Нет", isSelected: !vm.showWithTransfer) {
+                            vm.showWithTransfer = false
                         }
                     }
                     .padding(.horizontal, 16)
@@ -67,50 +73,37 @@ struct TimeFilterView: View {
                 
                 Spacer()
                 
-                // ИСПРАВЛЕННАЯ КНОПКА — КЛИКАБЕЛЬНА ПО ВСЕЙ ПЛОЩАДИ
                 Button {
-                    directionVM.selectedTimeOfDay = tempSelectedTimes
-                    directionVM.showWithTransfer = tempShowWithTransfer
+                    vm.apply()
                     dismiss()
                 } label: {
-                    HStack {
-                        Spacer()
-                        Text("Применить")
-                            .font(.custom("SFProText-Bold", size: 17))
-                            .foregroundColor(.white)
-                        Spacer()
-                    }
-                    
+                    Text("Применить")
+                        .font(.custom("SFProText-Bold", size: 17))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 60)
+                        .background(Color.blue)
+                        .cornerRadius(16)
                 }
-                .font(.custom("SFProText-Bold", size: 17))
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 60)
-                .background(Color.blue)
-                .cornerRadius(16)
                 .padding(.horizontal, 16)
             }
             .background(Color(.systemGroupedBackground))
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button { dismiss() } label: {
+                    Button {
+                        dismiss()
+                    } label: {
                         Image("BackIcon")
                             .resizable()
-                            .aspectRatio(contentMode: .fit)
                             .frame(width: 17, height: 22)
                     }
                     .padding(.leading, 8)
                 }
             }
-            .onAppear {
-                tempSelectedTimes = directionVM.selectedTimeOfDay
-                tempShowWithTransfer = directionVM.showWithTransfer
-            }
         }
     }
 }
-
 struct TimeOfDayRow: View {
     let title: String
     let timeRange: String
@@ -179,7 +172,7 @@ struct TransferRow: View {
     }
 }
 
-#Preview {
-    TimeFilterView()
-        .environmentObject(ChooseDirectionViewModel())
-}
+//#Preview {
+//    TimeFilterView()
+//        .environmentObject(ChooseDirectionViewModel())
+//}

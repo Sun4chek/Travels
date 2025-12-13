@@ -1,26 +1,42 @@
+
+// CroosView.swift — ФИНАЛЬНАЯ РАБОЧАЯ ВЕРСИЯ
 import SwiftUI
 
 struct CroosView: View {
-    @EnvironmentObject var directionVM: ChooseDirectionViewModel
-    @Environment(\.dismiss) private var dismiss
-    @State private var showFilter = false
-    @State private var selectedCompany: CompanyModel?
-
+    private let fromCode: String
+    private let toCode: String
+    private let routeTitle: String
     
-    private var filteredCompanies: [CompanyModel] {
-        directionVM.filteredCompanies()
+    @StateObject private var vm: CroosViewModel
+    
+    @Environment(\.dismiss) private var dismiss
+    
+    @State private var selectedRoute: CrossModel?
+    
+    init(fromCode: String, toCode: String, routeTitle: String) {
+        self.fromCode = fromCode
+        self.toCode = toCode
+        self.routeTitle = routeTitle
+        _vm = StateObject(wrappedValue: CroosViewModel(fromCode: fromCode, toCode: toCode))
     }
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Text(directionVM.allRoad())
+                Text(routeTitle)
                     .font(.custom("SFProText-Bold", size: 24))
                     .multilineTextAlignment(.leading)
                     .padding(.top, 16)
                     .padding(.horizontal, 16)
                 
-                if filteredCompanies.isEmpty {
+                if vm.isLoading {
+                    Spacer()
+                    ProgressView("Ищем рейсы...")
+                        .font(.title2)
+                    Spacer()
+                } else if let error = vm.errorMessage {
+                    // ... ошибка ...
+                } else if vm.filteredRoutes.isEmpty {
                     Spacer()
                     Text("Вариантов нет")
                         .font(.custom("SFProText-Semibold", size: 18))
@@ -29,10 +45,9 @@ struct CroosView: View {
                 } else {
                     ScrollView {
                         LazyVStack(spacing: 8) {
-                            ForEach(filteredCompanies) { company in
-                                CompanyCellView(company: company) {
-                                    selectedCompany = company
-                                    
+                            ForEach(vm.filteredRoutes) { route in
+                                CompanyCellView(route: route) {
+                                    selectedRoute = route
                                 }
                                 .padding(.horizontal, 16)
                             }
@@ -41,8 +56,9 @@ struct CroosView: View {
                     }
                 }
                 
+                // КНОПКА — теперь меняет vm.showFilter!
                 Button {
-                    showFilter = true
+                    vm.showFilter = true  // ← ВОТ ЭТО КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ!
                 } label: {
                     Text("Уточнить время")
                         .font(.custom("SFProText-Bold", size: 17))
@@ -52,20 +68,16 @@ struct CroosView: View {
                         .background(Color.blue)
                         .cornerRadius(16)
                         .overlay(
-                            GeometryReader { geometry in
-                                if directionVM.isFilterActive {
+                            GeometryReader { geo in
+                                if vm.isFilterActive {
                                     Circle()
                                         .fill(Color.red)
                                         .frame(width: 9, height: 9)
-                                        .position(
-                                            x: geometry.size.width * 0.72, // Настройте множитель
-                                            y: geometry.size.height * 0.50
-                                        )
+                                        .position(x: geo.size.width * 0.72, y: geo.size.height * 0.50)
                                 }
                             }
                         )
                 }
-                
                 .padding(.horizontal, 16)
             }
             .navigationBarBackButtonHidden(true)
@@ -80,16 +92,27 @@ struct CroosView: View {
                     .padding(.leading, 8)
                 }
             }
-            .fullScreenCover(isPresented: $showFilter) {
-                TimeFilterView()
-                    .environmentObject(directionVM)
+            
+            // ФИЛЬТР — теперь ОТКРЫВАЕТСЯ!
+            .fullScreenCover(isPresented: $vm.showFilter) {
+                TimeFilterView(
+                    initialTimes: vm.selectedTimeOfDay,
+                    initialTransfer: vm.showWithTransfer
+                ) { times, transfer in
+                    vm.selectedTimeOfDay = times
+                    vm.showWithTransfer = transfer
+                }
+            }
+            
+            .fullScreenCover(item: $selectedRoute) { route in
+                NavigationStack {
+                    TransitInfoView(carrierCode: route.carrierCode ?? "")
+                }
+            }
+            
+            .task {
+                await vm.loadRoutes()
             }
         }
-        .fullScreenCover(item: $selectedCompany) { company in
-            NavigationStack {
-                TransitInfoView(company: company)
-            }
-        }
-
     }
 }

@@ -3,7 +3,7 @@ import OpenAPIURLSession
 
 typealias Carrier = Components.Schemas.CarrierResponse
 
-protocol CarrierProtocol {
+protocol CarrierProtocol : Sendable {
     func getCarrier(code: String, system: String?) async throws -> Carrier
 }
 

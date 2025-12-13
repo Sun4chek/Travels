@@ -4,7 +4,7 @@ import Foundation
 
 typealias AllStations = Components.Schemas.AllStationsResponse
 
-protocol AllStationsServiceProtocol {
+protocol AllStationsServiceProtocol: Sendable {
     func getAllStations() async throws -> AllStations
 }
 
