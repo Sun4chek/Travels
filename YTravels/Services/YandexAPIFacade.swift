@@ -2,7 +2,7 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 import Foundation
 
-final class YandexRaspAPI {
+actor YandexRaspAPI {
     private var cachedRussianCities: [CityStruct]? = nil
     private let nearestStationsService: NearestStationsServiceProtocol
     private let scheduleBetweenStationsService: ScheduleBetweenStationsServiceProtocol

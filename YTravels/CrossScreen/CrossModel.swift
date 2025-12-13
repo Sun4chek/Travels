@@ -11,7 +11,7 @@ enum TimeOfDayType {
     case morning, day, afternoon, night, none
 }
 
-struct  CrossModel: Identifiable {
+struct  CrossModel: Identifiable , Sendable{
     let id = UUID()
     let carrierName: String
     let carrierCode: String?

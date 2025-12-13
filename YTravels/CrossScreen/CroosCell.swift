@@ -52,7 +52,7 @@ struct CompanyCellView: View {
                     .frame(height: 1)
                 Text(route.arrivalTime)
                     .foregroundColor(.black)
-                    .font(.custom("SFPro-Regula", size: 17)) // ← Оставил твою опечатку — пиксель в пиксель!
+                    .font(.custom("SFPro-Regula", size: 17))
             }
             .padding(.horizontal)
             .padding(.top, 4)

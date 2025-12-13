@@ -15,7 +15,7 @@ final class TransitInfoViewModel: ObservableObject {
     @Published var errorMessage: String? = nil
     
     private let carrierCode: String
-    private let api = APIProvider.shared.yandexRasp
+    private let apiProvider = APIProvider.shared
     
     init(carrierCode: String) {
         self.carrierCode = carrierCode
@@ -26,7 +26,14 @@ final class TransitInfoViewModel: ObservableObject {
         errorMessage = nil
         
         do {
+            let provider = apiProvider
+            
+            // 2. Теперь мы "внутри" actor и можем получить свойство
+            let api = provider.yandexRasp
+            
+            // 3. Вызываем async метод
             info = try await api.getSimpleCarrierInfo(code: carrierCode)
+
         } catch {
             errorMessage = "Не удалось загрузить информацию"
             print("Ошибка: \(error)")

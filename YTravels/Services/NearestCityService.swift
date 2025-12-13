@@ -3,7 +3,7 @@ import OpenAPIURLSession
 
 typealias NearestSettlement = Components.Schemas.NearestCityResponse
 
-protocol NearestSettlementProtocol {
+protocol NearestSettlementProtocol : Sendable {
     func getNearestSettlement(lat: Double, lng: Double) async throws -> NearestSettlement
 }
 

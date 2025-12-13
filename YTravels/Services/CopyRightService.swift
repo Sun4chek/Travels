@@ -6,7 +6,7 @@ typealias Copyright = Components.Schemas.Copyright
 
 typealias CopyrightResponse = Components.Schemas.CopyrightResponse
 
-protocol CopyrightServiceProtocol {
+protocol CopyrightServiceProtocol : Sendable {
     func getCopyright() async throws -> CopyrightResponse
 }
 

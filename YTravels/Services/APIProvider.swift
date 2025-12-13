@@ -11,7 +11,7 @@ import OpenAPIURLSession
 
 
 
-final class APIProvider {
+final class APIProvider : @unchecked Sendable{
     static let shared = APIProvider()
     
     let yandexRasp: YandexRaspAPI

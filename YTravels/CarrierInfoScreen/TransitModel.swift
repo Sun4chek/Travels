@@ -1,11 +1,5 @@
-//
-//  TransitModel.swift
-//  YTravels
-//
-//  Created by Волошин Александр on 12/12/25.
-//
 
-struct TransitInfoModel {
+struct TransitInfoModel: Sendable {
     let name: String
     let phone: String
     let email: String

@@ -3,7 +3,7 @@ import OpenAPIURLSession
 
 typealias Segments = Components.Schemas.Segments
 
-protocol ScheduleBetweenStationsServiceProtocol {
+protocol ScheduleBetweenStationsServiceProtocol: Sendable  {
     func getSchedule(from: String, to: String,transfers: Bool) async throws -> Segments
 }
 
